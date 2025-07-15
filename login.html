@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Connexion Administration - Concessionnaire Auto</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+  <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
+    <h1 class="text-2xl font-bold mb-6 text-center text-yellow-600">🔐 Accès Administration</h1>
+    <form id="loginForm" class="space-y-4">
+      <input type="email" id="email" class="w-full border p-2 rounded" placeholder="Email administrateur" required>
+      <input type="password" id="password" class="w-full border p-2 rounded" placeholder="Mot de passe" required>
+      <button type="submit" class="w-full bg-yellow-600 text-white font-bold py-2 rounded hover:bg-yellow-700">Se connecter</button>
+    </form>
+    <p id="erreur" class="text-red-600 text-sm mt-4 text-center hidden"></p>
+  </div>
+
+  <script>
+    // Firebase config (Assurez-vous que ces informations correspondent exactement à celles de votre projet Firebase)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDhn7_DT49CWkg5atHPz3hZVYnPVSLdaos", // REMPLACEZ PAR VOTRE VRAIE CLÉ API
+      authDomain: "automobile-c6769.firebaseapp.com",
+      projectId: "automobile-c6769",
+      storageBucket: "automobile-c6769.firebasestorage.app",
+      messagingSenderId: "672823943035",
+      appId: "1:672823943035:web:f8ff8623623cebf58b67de",
+      measurementId: "G-FCYWVT83Y2" // Ceci est pour Google Analytics, pas directement utilisé par l'authentification seule
+    };
+
+    // Initialisation de Firebase avec la syntaxe COMPATIBLE (via l'objet global 'firebase')
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth(); // Récupère l'instance d'authentification Firebase
+
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const erreurMessage = document.getElementById('erreur');
+
+    document.getElementById("loginForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const email = emailInput.value;
+      const password = passwordInput.value;
+
+      erreurMessage.classList.add('hidden'); // Masquer les messages d'erreur précédents
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+          // Connexion réussie, rediriger vers la page d'administration
+          window.location.href = "admin.html";
+        })
+        .catch((error) => {
+          // Gérer les erreurs de connexion
+          let message;
+          switch (error.code) {
+            case 'auth/user-not-found':
+            case 'auth/wrong-password':
+              message = 'Email ou mot de passe incorrect.';
+              break;
+            case 'auth/invalid-email':
+              message = 'Format d\'email invalide.';
+              break;
+            case 'auth/too-many-requests':
+                message = 'Accès temporairement bloqué en raison de trop de tentatives de connexion échouées. Veuillez réessayer plus tard.';
+                break;
+            default:
+              message = 'Erreur de connexion : ' + error.message;
+          }
+          erreurMessage.textContent = message;
+          erreurMessage.classList.remove('hidden');
+          console.error("Erreur de connexion:", error);
+        });
+    });
+  </script>
+</body>
+</html>

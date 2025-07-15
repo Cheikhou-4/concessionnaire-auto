@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./image/logo.png">
+    <title>Votre Concessionnaire Auto - Vente & Location</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* Styles de base */
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f0f2f5; /* Un fond légèrement plus doux */
+        }
+
+        /* Améliorations de l'En-tête */
+        header {
+            background-color: #1a202c; /* En-tête plus sombre et plus premium */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Ombre plus forte pour la profondeur */
+        }
+        header .text-2xl {
+            color: #fca311; /* Jaune vibrant pour la marque */
+        }
+        header nav a {
+            color: #cbd5e0; /* Texte plus clair pour la navigation */
+            padding: 0.5rem 1rem; /* Ajout de rembourrage pour un aspect bouton */
+            border-radius: 0.375rem; /* Coins légèrement arrondis */
+            transition: all 0.3s ease-in-out;
+            font-weight: 500; /* Texte légèrement plus gras */
+        }
+        header nav a:hover {
+            color: #fca311; /* Texte jaune au survol */
+            background-color: rgba(252, 163, 17, 0.1); /* Fond jaune subtil au survol */
+        }
+        /* Couleur du bouton du menu mobile */
+        #mobile-menu-button {
+            color: #cbd5e0;
+        }
+        #mobile-menu a {
+            color: #1a202c; /* Texte sombre pour les éléments du menu mobile */
+        }
+        #mobile-menu a:hover {
+            background-color: #f0f4f8; /* Fond clair au survol */
+            color: #fca311;
+        }
+
+        /* Améliorations de la section Héro */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('https://images.unsplash.com/photo-1494976388531-d1058494cdd8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 1s ease-out; /* Simple fade-in pour le héro */
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4); /* Superposition plus sombre pour la lisibilité du texte */
+            z-index: 1;
+        }
+        .hero .container {
+            position: relative;
+            z-index: 2;
+        }
+        .hero h1 {
+            font-size: 4.8rem; /* Encore plus grand pour un impact plus fort */
+            font-weight: 800;
+            margin-bottom: 1.2rem;
+            line-height: 1.1;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.6); /* Ombre plus prononcée */
+            letter-spacing: -1px; /* Espacement des lettres légèrement plus serré */
+            animation: slideInUp 1s ease-out;
+        }
+        .hero p {
+            font-size: 1.85rem; /* Paragraphe plus grand */
+            margin-bottom: 3rem;
+            opacity: 0.95;
+            animation: slideInUp 1.2s ease-out;
+        }
+        .hero a {
+            padding: 1.1rem 3.5rem; /* Boutons plus grands */
+            font-size: 1.35rem;
+            border-radius: 9999px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 6px 20px rgba(252, 163, 17, 0.5); /* Effet lumineux plus fort */
+            font-weight: 700;
+            background-color: #fca311; /* Assure une couleur cohérente */
+        }
+        .hero a:hover {
+            transform: translateY(-5px) scale(1.05); /* Effet de levée et de mise à l'échelle plus prononcé */
+            box-shadow: 0 8px 25px rgba(252, 163, 17, 0.7);
+            background-color: #e59200; /* Plus foncé au survol */
+        }
+
+        /* Style des sections */
+        .section-padding {
+            padding: 100px 0; /* Plus d'espace vertical */
+        }
+        .section-title {
+            font-size: 3.8rem; /* Titres de section plus grands */
+            font-weight: 800;
+            margin-bottom: 3rem;
+            color: #1a202c; /* Texte de titre plus foncé pour un meilleur contraste */
+            position: relative;
+            display: inline-block;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -15px;
+            transform: translateX(-50%);
+            width: 100px; /* Soulignement plus large */
+            height: 5px; /* Soulignement plus épais */
+            background-color: #fca311;
+            border-radius: 3px;
+        }
+        .bg-pattern {
+            background-image: url('https://www.transparenttextures.com/patterns/clean-textile.png');
+            background-repeat: repeat;
+        }
+        .bg-gray-50 {
+            background-color: #f8f9fa; /* Gris encore plus clair */
+        }
+
+        /* Améliorations des cartes de véhicule */
+        .vehicle-card {
+            background-color: #fff;
+            border-radius: 16px; /* Coins plus arrondis */
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1); /* Ombre plus douce et plus grande */
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* Transition plus fluide */
+        }
+        .vehicle-card:hover {
+            transform: translateY(-15px); /* Effet de levée plus prononcé */
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2); /* Ombre plus forte au survol */
+        }
+        .vehicle-card img {
+            height: 260px; /* Images encore plus hautes */
+            object-fit: cover;
+            width: 100%;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+        }
+        .vehicle-card .p-6 {
+            padding: 2rem; /* Plus de rembourrage */
+        }
+        .vehicle-card h3 {
+            font-size: 2rem; /* Noms de véhicule plus grands */
+            color: #1a202c;
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+        }
+        .vehicle-card p {
+            font-size: 1.05rem;
+            color: #4a5568;
+            margin-bottom: 1.2rem;
+            line-height: 1.5;
+        }
+        .vehicle-card .text-xl {
+            font-size: 1.6rem; /* Prix plus grand */
+            font-weight: 800;
+            color: #fca311;
+        }
+        .btn-view-vehicle {
+            background-color: #fca311;
+            color: white;
+            padding: 0.9rem 1.8rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: background-color 0.3s ease-in-out, transform 0.2s;
+        }
+        .btn-view-vehicle:hover {
+            background-color: #e59200;
+            transform: translateY(-2px);
+        }
+
+        /* Style des formulaires */
+        form {
+            background-color: #ffffff;
+            padding: 3.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+        form input,
+        form textarea,
+        form select {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px; /* Plus arrondi */
+            padding: 1rem 1.5rem; /* Plus de rembourrage */
+            font-size: 1.05rem;
+            transition: all 0.3s ease-in-out;
+            background-color: #fdfdfd;
+        }
+        form input:focus,
+        form textarea:focus,
+        form select:focus {
+            border-color: #fca311;
+            box-shadow: 0 0 0 4px rgba(252, 163, 17, 0.25); /* Anneau de focus plus fort */
+            outline: none;
+        }
+        form button[type="submit"] {
+            background-color: #fca311;
+            padding: 1.1rem 3.5rem;
+            font-size: 1.2rem;
+            border-radius: 9999px;
+            transition: background-color 0.3s ease-in-out, transform 0.2s;
+            font-weight: 700;
+        }
+        form button[type="submit"]:hover {
+            background-color: #e59200;
+            transform: translateY(-2px);
+        }
+
+        /* Témoignages */
+        #testimonials .bg-white {
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+        }
+        #testimonials .italic {
+            font-style: normal;
+            position: relative;
+            padding-left: 30px; /* Plus d'espace pour l'icône de citation */
+            margin-bottom: 1.2rem;
+            font-size: 1.15rem;
+            color: #333;
+            line-height: 1.7;
+        }
+        #testimonials .italic::before {
+            content: '“';
+            font-family: 'Georgia', serif;
+            font-size: 4em; /* Icône de citation plus grande */
+            color: #fca311;
+            position: absolute;
+            left: 0;
+            top: -15px; /* Ajuster la position verticale */
+            line-height: 1;
+        }
+        #testimonials .font-semibold {
+            font-size: 1.05rem;
+            color: #666;
+        }
+
+        /* Pied de page */
+        footer {
+            background-color: #1a202c;
+            color: #cbd5e0;
+            padding: 60px 0; /* Plus de rembourrage */
+        }
+        footer .text-yellow-600 {
+            color: #fca311;
+        }
+        footer a {
+            color: #a0aec0;
+        }
+        footer a:hover {
+            color: #fca311;
+        }
+
+        /* Menu mobile */
+        #mobile-menu {
+            border-top: 1px solid #3b424e; /* Bordure plus sombre */
+            background-color: #2c3440; /* Fond plus sombre */
+        }
+        #mobile-menu a {
+            color: #cbd5e0; /* Texte plus clair pour le contraste */
+        }
+        #mobile-menu a:hover {
+            background-color: #3b424e;
+            color: #fca311;
+        }
+
+        /* Boutons de catégorie */
+        .btn-category {
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 9999px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Ombre subtile */
+        }
+        .btn-category.bg-yellow-600 {
+            background-color: #fca311;
+            border-color: #fca311;
+            color: white;
+            box-shadow: 0 5px 20px rgba(252, 163, 17, 0.35); /* Ombre plus prononcée */
+        }
+        .btn-category.bg-white {
+            background-color: #ffffff;
+            color: #4a5568;
+            border-color: #e2e8f0;
+        }
+        .btn-category.bg-white:hover {
+            background-color: #f0f4f8;
+            border-color: #fca311;
+            color: #fca311;
+            box-shadow: 0 3px 10px rgba(252, 163, 17, 0.2);
+        }
+
+        /* Keyframe Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800">
+
+    <header class="shadow-md fixed w-full top-0 z-50">
+        <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold">
+                Votre Concessionnaire Auto
+            </a>
+            <div class="hidden md:flex space-x-2"> <a href="#home">Accueil</a>
+                <a href="#vehicles">Nos Véhicules</a>
+                <a href="#quote">Demande de Devis</a>
+                <a href="#test-drive">Essai Routier</a>
+                <a href="#gallery">Galerie</a>
+                <a href="#testimonials">Témoignages</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </nav>
+
+        <div id="mobile-menu" class="md:hidden hidden shadow-lg py-2">
+            <a href="#home" class="block px-4 py-2">Accueil</a>
+            <a href="#vehicles" class="block px-4 py-2">Nos Véhicules</a>
+            <a href="#quote" class="block px-4 py-2">Demande de Devis</a>
+            <a href="#test-drive" class="block px-4 py-2">Essai Routier</a>
+            <a href="#gallery" class="block px-4 py-2">Galerie</a>
+            <a href="#testimonials" class="block px-4 py-2">Témoignages</a>
+            <a href="#contact" class="block px-4 py-2">Contact</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="container mx-auto px-4">
+                <h1 class="animate-fade-in-up">Trouvez Votre Véhicule Idéal</h1>
+                <p class="animate-fade-in-up delay-200">Vente, Location et Services Automobile de Qualité au Sénégal</p>
+                <a href="#vehicles" class="bg-yellow-600 text-white font-semibold hover:bg-yellow-700 transition duration-300 animate-fade-in-up delay-400">Découvrir Notre Flotte</a>
+            </div>
+        </section>
+
+        <section id="about" class="section-padding bg-white">
+            <div class="container mx-auto px-4 flex flex-col md:flex-row items-center gap-10">
+                <div class="md:w-1/2">
+                    <img src="https://images.unsplash.com/photo-1549317676-e10f135b376b?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Véhicules modernes" class="rounded-lg shadow-lg">
+                </div>
+                <div class="md:w-1/2">
+                    <h2 class="section-title text-center md:text-left">Qui sommes-nous ?</h2>
+                    <p class="text-lg leading-relaxed mb-4 text-gray-700">
+                        Bienvenue chez Votre Concessionnaire Auto, votre partenaire de confiance pour la vente et la location de véhicules au Sénégal. Forts de notre expertise et de notre passion pour l'automobile, nous nous engageons à vous offrir une sélection diversifiée de voitures, camions et autres véhicules de qualité, adaptés à tous vos besoins et budgets.
+                    </p>
+                    <p class="text-lg leading-relaxed text-gray-700">
+                        Que vous cherchiez à acheter un véhicule neuf ou d'occasion, ou à louer pour une courte ou longue durée, notre équipe dédiée est là pour vous conseiller et vous accompagner à chaque étape. Notre objectif est votre satisfaction et la garantie d'une expérience automobile fluide et agréable.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="vehicles" class="section-padding bg-pattern bg-gray-50">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="section-title">Nos Véhicules Disponibles</h2>
+
+                <div class="flex flex-wrap justify-center gap-4 mb-10">
+                    <button class="btn-category bg-yellow-600 text-white" data-category="all">Toutes Catégories</button>
+                    <button class="btn-category bg-white text-gray-700" data-category="voitures">Voitures</button>
+                    <button class="btn-category bg-white text-gray-700" data-category="camions">Camions</button>
+                    <button class="btn-category bg-white text-gray-700" data-category="suv">SUV & 4x4</button>
+                    <button class="btn-category bg-white text-gray-700" data-category="motos">Motos</button>
+                    <button class="btn-category bg-white text-gray-700" data-category="vans">Vans & Minibus</button>
+                </div>
+
+                <div id="vehicle-items" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <p class="col-span-full text-center text-gray-500">Chargement des véhicules...</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="quote" class="section-padding bg-white">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="section-title">Demander un Devis ou une Location</h2>
+                <p class="text-lg mb-8 text-gray-600">Remplissez ce formulaire pour obtenir plus d'informations sur un véhicule, ou pour démarrer une demande de location.</p>
+
+                <form id="quoteForm" class="max-w-xl mx-auto space-y-6">
+                    <input type="text" id="clientNameQuote" class="w-full" placeholder="Votre Nom Complet" required>
+                    <input type="email" id="clientEmailQuote" class="w-full" placeholder="Votre Email" required>
+                    <input type="tel" id="clientPhoneQuote" class="w-full" placeholder="Votre Téléphone (Ex: +221 77 123 45 67)" required>
+
+                    <select id="selectVehicle" class="w-full" required>
+                        <option value="">Sélectionnez un véhicule</option>
+                        </select>
+
+                    <select id="requestType" class="w-full" required>
+                        <option value="">Type de Demande</option>
+                        <option value="achat">Demande d'Achat</option>
+                        <option value="location">Demande de Location</option>
+                    </select>
+
+                    <div id="rentalDates" class="hidden space-y-6">
+                        <label for="startDate" class="block text-left text-gray-700 font-medium">Date de Début de Location:</label>
+                        <input type="date" id="startDate" class="w-full">
+
+                        <label for="endDate" class="block text-left text-gray-700 font-medium">Date de Fin de Location:</label>
+                        <input type="date" id="endDate" class="w-full">
+                    </div>
+
+                    <textarea id="messageQuote" class="w-full h-32" placeholder="Votre message ou questions spécifiques (ex: durée de location souhaitée, besoin particulier)"></textarea>
+
+                    <button type="submit" class="bg-yellow-600 text-white font-bold">Envoyer ma Demande</button>
+                    <p id="quoteMessage" class="mt-4 text-center text-sm"></p>
+                </form>
+            </div>
+        </section>
+
+        <section id="test-drive" class="section-padding bg-pattern bg-gray-50">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="section-title">Réserver un Essai Routier</h2>
+                <p class="text-lg mb-8 text-gray-600">Vivez l'expérience au volant ! Remplissez ce formulaire pour planifier votre essai routier.</p>
+
+                <form id="testDriveForm" class="max-w-xl mx-auto space-y-6">
+                    <input type="text" id="clientNameTestDrive" class="w-full" placeholder="Votre Nom Complet" required>
+                    <input type="email" id="clientEmailTestDrive" class="w-full" placeholder="Votre Email" required>
+                    <input type="tel" id="clientPhoneTestDrive" class="w-full" placeholder="Votre Téléphone" required>
+
+                    <select id="selectVehicleTestDrive" class="w-full" required>
+                        <option value="">Véhicule souhaité pour l'essai</option>
+                        </select>
+
+                    <input type="date" id="testDriveDate" class="w-full" required>
+                    <input type="time" id="testDriveTime" class="w-full" required>
+
+                    <textarea id="messageTestDrive" class="w-full h-24" placeholder="Messages supplémentaires (ex: préférences, questions)"></textarea>
+
+                    <button type="submit" class="bg-yellow-600 text-white font-bold">Confirmer l'Essai Routier</button>
+                    <p id="testDriveMessage" class="mt-4 text-center text-sm"></p>
+                </form>
+            </div>
+        </section>
+
+        <section id="gallery" class="section-padding bg-white">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="section-title">Notre Galerie de Véhicules</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <img src="https://images.unsplash.com/photo-1583120760639-6886e42b8e3a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Voiture de sport" class="rounded-lg shadow-md w-full h-auto object-cover">
+                    <img src="https://images.unsplash.com/photo-1502877338535-766e11dd4610?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="SUV urbain" class="rounded-lg shadow-md w-full h-auto object-cover">
+                    <img src="https://images.unsplash.com/photo-1560945803-0c48e718dfb4?q=80&w=1968&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Camion pick-up" class="rounded-lg shadow-md w-full h-auto object-cover">
+                    <img src="https://plus.unsplash.com/b0a94167-7590-4c22-902e-5f99238e833b?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Véhicule familial" class="rounded-lg shadow-md w-full h-auto object-cover">
+                    <img src="https://images.unsplash.com/photo-1517772659309-df427e0259b6?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Voiture vintage" class="rounded-lg shadow-md w-full h-auto object-cover">
+                    <img src="https://images.unsplash.com/photo-1549488344-311244e82e22?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Motos" class="rounded-lg shadow-md w-full h-auto object-cover">
+                </div>
+            </div>
+        </section>
+
+        <section id="testimonials" class="section-padding bg-pattern bg-gray-50">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="section-title">Ce que Nos Clients Disent</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <p class="text-lg italic mb-4">"J'ai loué un véhicule pour mon voyage d'affaires à Dakar, et le service était impeccable. Le véhicule était en parfait état et la procédure rapide. Je recommande vivement !"</p>
+                        <p class="font-semibold text-yellow-600">- Fatou D., Dakar</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <p class="text-lg italic mb-4">"L'équipe m'a aidé à trouver le camion parfait pour mon entreprise. Leur expertise et leur patience ont rendu l'achat très facile. Un grand merci !"</p>
+                        <p class="font-semibold text-yellow-600">- Mouhamed F., Thiès</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <p class="text-lg italic mb-4">"J'ai fait l'acquisition de ma première voiture ici, et j'ai été très bien conseillée. Les prix sont compétitifs et le suivi excellent. Je suis ravie de mon achat."</p>
+                        <p class="font-semibold text-yellow-600">- Aminata S., Saint-Louis</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <p class="text-lg italic mb-4">"Le processus d'essai routier était simple et le personnel très professionnel. J'ai pu tester plusieurs modèles avant de faire mon choix. Excellente expérience client."</p>
+                        <p class="font-semibold text-yellow-600">- David K., Ziguinchor</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="section-padding bg-white">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="section-title">Contactez-nous</h2>
+                <p class="text-lg mb-8 text-gray-600">Nous sommes là pour répondre à toutes vos questions et vous aider à trouver le véhicule parfait.</p>
+
+                <div class="flex flex-col md:flex-row justify-center items-start gap-10">
+                    <div class="md:w-1/2 bg-gray-50 p-8 rounded-lg shadow-lg text-left">
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-600">Nos Coordonnées</h3>
+                        <p class="mb-3"><i class="fas fa-map-marker-alt text-yellow-600 mr-3"></i> 123 Rue de l'Automobile, Dakar, Sénégal</p>
+                        <p class="mb-3"><i class="fas fa-phone text-yellow-600 mr-3"></i> +221 7X XXX XX XX</p>
+                        <p class="mb-3"><i class="fas fa-envelope text-yellow-600 mr-3"></i> contact@votreconcessionnaire.sn</p>
+                        <p class="mb-3"><i class="fas fa-clock text-yellow-600 mr-3"></i> Lun - Sam: 9h00 - 18h00</p>
+                        <div class="mt-6 flex space-x-4">
+                            <a href="#" class="text-gray-600 hover:text-yellow-600 transition duration-300"><i class="fab fa-facebook-f text-2xl"></i></a>
+                            <a href="#" class="text-gray-600 hover:text-yellow-600 transition duration-300"><i class="fab fa-twitter text-2xl"></i></a>
+                            <a href="#" class="text-gray-600 hover:text-yellow-600 transition duration-300"><i class="fab fa-instagram text-2xl"></i></a>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 bg-gray-50 p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-600">Envoyez-nous un message</h3>
+                        <form id="contactForm" class="space-y-4">
+                            <input type="text" id="contactName" class="w-full" placeholder="Votre Nom" required>
+                            <input type="email" id="contactEmail" class="w-full" placeholder="Votre Email" required>
+                            <input type="text" id="contactSubject" class="w-full" placeholder="Sujet" required>
+                            <textarea id="contactMessage" class="w-full h-32" placeholder="Votre Message" required></textarea>
+                            <button type="submit" class="bg-yellow-600 text-white font-bold">Envoyer le Message</button>
+                            <p id="contactFormMessage" class="mt-4 text-center text-sm"></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white py-10">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center md:items-start gap-8">
+                <div class="text-center md:text-left mb-6 md:mb-0">
+                    <a href="#" class="text-3xl font-bold mb-2 block text-yellow-600">Votre Concessionnaire Auto</a>
+                    <p class="text-gray-400 text-sm">Votre partenaire de confiance pour la mobilité au Sénégal.</p>
+                </div>
+
+                <div class="text-center md:text-left mb-6 md:mb-0">
+                    <h3 class="text-xl font-semibold mb-3 text-yellow-600">Liens Rapides</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-yellow-600 transition duration-300">Accueil</a></li>
+                        <li><a href="#vehicles" class="text-gray-400 hover:text-yellow-600 transition duration-300">Nos Véhicules</a></li>
+                        <li><a href="#quote" class="text-gray-400 hover:text-yellow-600 transition duration-300">Demande de Devis</a></li>
+                        <li><a href="#test-drive" class="text-gray-400 hover:text-yellow-600 transition duration-300">Essai Routier</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-yellow-600 transition duration-300">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="text-center md:text-left mb-6 md:mb-0">
+                    <h3 class="text-xl font-semibold mb-3 text-yellow-600">Suivez-nous</h3>
+                    <div class="flex justify-center md:justify-start space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-yellow-600 transition duration-300"><i class="fab fa-facebook-f text-2xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-yellow-600 transition duration-300"><i class="fab fa-twitter text-2xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-yellow-600 transition duration-300"><i class="fab fa-instagram text-2xl"></i></a>
+                    </div>
+                </div>
+
+                <div class="text-center md:text-left">
+                    <h3 class="text-xl font-semibold mb-3 text-yellow-600">Informations Légales</h3>
+                    <div class="flex flex-col space-y-2">
+                        <a href="#" class="text-gray-400 hover:text-yellow-600 text-sm transition duration-300">Politique de Confidentialité</a>
+                        <a href="#" class="text-gray-400 hover:text-yellow-600 text-sm transition duration-300">Conditions d'utilisation</a>
+                        <a href="#" class="text-gray-400 hover:text-yellow-600 text-sm transition duration-300">Mentions légales</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <div class="mt-6 text-center">
+    <a href="login.html" class="text-gray-400 hover:text-yellow-500 text-sm underline">👤 Accès admin</a>
+  </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+   <script>
+  // 🍔 Mobile menu toggle
+  const mobileMenuButton = document.getElementById('mobile-menu-button');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  mobileMenuButton?.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+
+  // 🔗 Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const targetId = this.getAttribute('href');
+      if (targetId === '#') return;
+
+      const targetElement = document.querySelector(targetId);
+      if (targetElement) {
+        window.scrollTo({
+          top: targetElement.offsetTop - 80, // Adjust for fixed header
+          behavior: 'smooth'
+        });
+
+        // Close mobile menu after clicking a link
+        if (!mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.add('hidden');
+        }
+      }
+    });
+  });
+
+  // Firebase config (NOTE: For production, these keys should be handled more securely)
+  const firebaseConfig = {
+    apiKey: "AIzaSyDhn7_DT49CWkg5atHPz3hZVYnPVSLdaos",
+    authDomain: "automobile-c6769.firebaseapp.com",
+    projectId: "automobile-c6769",
+    storageBucket: "automobile-c6769.firebasestorage.app",
+    messagingSenderId: "672823943035",
+    appId: "1:672823943035:web:f8ff8623623cebf58b67de",
+    measurementId: "G-FCYWVT83Y2"
+  };
+
+  // Initialize Firebase with the COMPATIBLE syntax
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore(); // Add this line for Firestore
+
+  // If you are using Analytics with the compat version, it's not direct like getAnalytics(app).
+  // For now, comment out or remove the following line to avoid the error.
+  // const analytics = getAnalytics(app);
+
+  // EmailJS configuration (MIS À JOUR AVEC VOS CLÉS/IDS RÉELS)
+  emailjs.init("ocvVgLNy6sWLzZFvx"); // Votre Clé Publique EmailJS
+
+  const SERVICE_ID = "service_v774uxi"; // Votre ID de service EmailJS
+  const TEMPLATE_QUOTE_ID = "template_5nnp0v4"; // ID du template pour les demandes de devis/location
+  const TEMPLATE_TESTDRIVE_ID = "template_zlgyptd"; // ID du template pour les essais routiers
+  const TEMPLATE_CONTACT_ID = "YOUR_EMAILJS_CONTACT_TEMPLATE_ID"; // IMPORTANT : Remplacez par l'ID de votre template de contact !
+
+
+  // --- Vehicle Loading and Filtering (formerly Menu Items) ---
+  const vehicleItemsContainer = document.getElementById('vehicle-items');
+  const categoryButtons = document.querySelectorAll('.btn-category');
+  let allVehicles = []; // Store all vehicles to filter them
+
+  async function loadVehicles() {
+    vehicleItemsContainer.innerHTML = '<p class="col-span-full text-center py-4 text-gray-500">Chargement des véhicules...</p>';
+    try {
+      const snapshot = await db.collection("vehicles").orderBy("name").get(); // New collection: "vehicles"
+      allVehicles = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      displayVehicles(allVehicles);
+      populateVehicleSelects(allVehicles); // Populate select dropdowns
+    } catch (error) {
+      console.error("❌ Erreur lors du chargement des véhicules :", error);
+      vehicleItemsContainer.innerHTML = '<p class="col-span-full text-center py-4 text-red-600">Impossible de charger les véhicules. Veuillez réessayer plus tard.</p>';
+    }
+  }
+
+  function displayVehicles(vehiclesToDisplay) {
+    vehicleItemsContainer.innerHTML = '';
+    if (vehiclesToDisplay.length === 0) {
+      vehicleItemsContainer.innerHTML = '<p class="col-span-full text-center py-4 text-gray-500">Aucun véhicule trouvé pour cette catégorie.</p>';
+      return;
+    }
+
+    // Array of aesthetically pleasing default car images for missing vehicle images
+    const defaultCarImages = [
+        "https://images.unsplash.com/photo-1596499318889-eb317f259740?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1542282088-75179043586d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1485291571150-772b7df969d6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ];
+    let defaultImageIndex = 0; // Pour parcourir les images par défaut
+
+    vehiclesToDisplay.forEach(vehicle => {
+      // Utilise vehicle.imageUrl si disponible, sinon alterne entre defaultCarImages
+      const imageUrl = vehicle.imageUrl && vehicle.imageUrl !== '' ? vehicle.imageUrl : defaultCarImages[defaultImageIndex++ % defaultCarImages.length];
+      const priceText = vehicle.price ? `${vehicle.price} F CFA` : 'Prix sur demande';
+
+      const vehicleCard = `
+        <div class="vehicle-card bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition duration-300">
+            <img src="${imageUrl}" alt="${vehicle.name}" class="w-full h-48 object-cover">
+            <div class="p-6">
+                <h3 class="text-2xl font-semibold mb-2">${vehicle.name}</h3>
+                <p class="text-gray-600 mb-4">${vehicle.description || 'Description non disponible.'}</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-xl font-bold text-yellow-600">${priceText}</span>
+                    <button class="bg-yellow-600 text-white py-2 px-4 rounded-full text-sm font-semibold hover:bg-yellow-700 transition duration-300 btn-view-vehicle"
+                            data-vehicle-id="${vehicle.id}" data-vehicle-name="${vehicle.name}">
+                        Voir Détails / Demander
+                    </button>
+                </div>
+            </div>
+        </div>
+      `;
+      vehicleItemsContainer.innerHTML += vehicleCard;
+    });
+
+    // Add event listeners to "Voir Détails / Demander" buttons
+    document.querySelectorAll('.btn-view-vehicle').forEach(button => {
+        button.addEventListener('click', function() {
+            const vehicleId = this.dataset.vehicleId; // non utilisé pour l'instant, mais peut être utile
+            const vehicleName = this.dataset.vehicleName;
+            // Vous pouvez implémenter une modale ici pour afficher les détails du véhicule,
+            // ou simplement pré-remplir le formulaire de devis et faire défiler la page.
+
+            // Pour l'instant, pré-remplissons et faisons défiler vers le formulaire de devis
+            document.getElementById('selectVehicle').value = vehicleName; // Assumes value is vehicle name for simplicity
+            window.scrollTo({
+                top: document.getElementById('quote').offsetTop - 80,
+                behavior: 'smooth'
+            });
+        });
+    });
+  }
+
+  // Filter vehicles by category
+  categoryButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      // Réinitialiser tous les boutons au style inactif
+      categoryButtons.forEach(btn => {
+        btn.classList.remove('bg-yellow-600', 'text-white');
+        btn.classList.add('bg-white', 'text-gray-700');
+      });
+
+      // Appliquer le style actif au bouton cliqué
+      this.classList.remove('bg-white', 'text-gray-700');
+      this.classList.add('bg-yellow-600', 'text-white');
+
+      const category = this.dataset.category;
+      if (category === 'all') {
+        displayVehicles(allVehicles);
+      } else {
+        const filteredVehicles = allVehicles.filter(vehicle => vehicle.category === category);
+        displayVehicles(filteredVehicles);
+      }
+    });
+  });
+
+  // Populate vehicle select dropdowns in forms
+  function populateVehicleSelects(vehicles) {
+    const selectVehicleQuote = document.getElementById('selectVehicle');
+    const selectVehicleTestDrive = document.getElementById('selectVehicleTestDrive');
+
+    // Supprimer les options précédentes sauf la première
+    while (selectVehicleQuote.children.length > 1) {
+        selectVehicleQuote.removeChild(selectVehicleQuote.lastChild);
+    }
+     while (selectVehicleTestDrive.children.length > 1) {
+        selectVehicleTestDrive.removeChild(selectVehicleTestDrive.lastChild);
+    }
+
+    vehicles.forEach(vehicle => {
+      const optionQuote = document.createElement('option');
+      optionQuote.value = vehicle.name; // Utilise le nom du véhicule comme valeur
+      optionQuote.textContent = vehicle.name + ' - ' + (vehicle.price ? `${vehicle.price} F CFA` : 'Prix sur demande');
+      selectVehicleQuote.appendChild(optionQuote);
+
+      const optionTestDrive = document.createElement('option');
+      optionTestDrive.value = vehicle.name; // Utilise le nom du véhicule comme valeur
+      optionTestDrive.textContent = vehicle.name;
+      selectVehicleTestDrive.appendChild(optionTestDrive);
+    });
+  }
+
+
+  // --- Quote/Rental Request Form (anciennement Order Form) ---
+  const quoteForm = document.getElementById('quoteForm');
+  const quoteMessage = document.getElementById('quoteMessage');
+  const requestTypeSelect = document.getElementById('requestType');
+  const rentalDatesDiv = document.getElementById('rentalDates');
+  const startDateInput = document.getElementById('startDate');
+  const endDateInput = document.getElementById('endDate');
+
+  requestTypeSelect.addEventListener('change', function() {
+      if (this.value === 'location') {
+          rentalDatesDiv.classList.remove('hidden');
+          startDateInput.setAttribute('required', 'required');
+          endDateInput.setAttribute('required', 'required');
+      } else {
+          rentalDatesDiv.classList.add('hidden');
+          startDateInput.removeAttribute('required');
+          endDateInput.removeAttribute('required');
+      }
+  });
+
+  quoteForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const clientName = document.getElementById('clientNameQuote').value;
+    const clientEmail = document.getElementById('clientEmailQuote').value;
+    const clientPhone = document.getElementById('clientPhoneQuote').value;
+    const selectedVehicle = document.getElementById('selectVehicle').value;
+    const requestType = requestTypeSelect.value;
+    const message = document.getElementById('messageQuote').value;
+    let rentalPeriod = '';
+
+    if (requestType === 'location') {
+        const startDate = startDateInput.value;
+        const endDate = endDateInput.value;
+        if (!startDate || !endDate) {
+            quoteMessage.textContent = 'Veuillez sélectionner les dates de début et de fin de location.';
+            quoteMessage.classList.add('text-red-600');
+            return;
+        }
+        rentalPeriod = `Du ${startDate} au ${endDate}`;
+    }
+
+    // Générer un code unique pour la demande
+    const requestNumber = 'REQ-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+
+    try {
+      // Sauvegarder les données dans Firebase (nouvelle collection: "requests")
+      await db.collection("requests").add({ // Utilise une collection générique "requests" pour les deux types de demandes
+        requestNumber: requestNumber,
+        clientName: clientName,
+        clientEmail: clientEmail,
+        clientPhone: clientPhone,
+        vehicle: selectedVehicle,
+        requestType: requestType,
+        rentalPeriod: rentalPeriod,
+        message: message,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        status: "En attente" // Statut initial
+      });
+
+      // Envoyer l'e-mail via EmailJS
+      const templateParams = {
+        request_number: requestNumber,
+        client_name: clientName,
+        client_email: clientEmail,
+        client_phone: clientPhone,
+        vehicle_name: selectedVehicle,
+        request_type: requestType === 'achat' ? 'Demande d\'Achat' : 'Demande de Location',
+        rental_period: rentalPeriod,
+        message: message
+      };
+
+      await emailjs.send(SERVICE_ID, TEMPLATE_QUOTE_ID, templateParams); // Utilisation de SERVICE_ID et TEMPLATE_QUOTE_ID
+
+      quoteMessage.textContent = 'Votre demande a été envoyée avec succès ! Nous vous recontacterons bientôt.';
+      quoteMessage.classList.remove('text-red-600');
+      quoteMessage.classList.add('text-green-600');
+      quoteForm.reset();
+      rentalDatesDiv.classList.add('hidden'); // Masquer les dates de location après soumission
+
+    } catch (error) {
+      console.error("❌ Erreur lors de l'envoi de la demande :", error);
+      quoteMessage.textContent = "Une erreur est survenue lors de l'envoi de votre demande. Veuillez réessayer.";
+      quoteMessage.classList.remove('text-green-600');
+      quoteMessage.classList.add('text-red-600');
+    }
+  });
+
+
+  // --- Formulaire d'Essai Routier (anciennement Formulaire de Réservation) ---
+  const testDriveForm = document.getElementById('testDriveForm');
+  const testDriveMessage = document.getElementById('testDriveMessage');
+
+  testDriveForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const clientName = document.getElementById('clientNameTestDrive').value;
+    const clientEmail = document.getElementById('clientEmailTestDrive').value;
+    const clientPhone = document.getElementById('clientPhoneTestDrive').value;
+    const selectedVehicle = document.getElementById('selectVehicleTestDrive').value;
+    const testDriveDate = document.getElementById('testDriveDate').value;
+    const testDriveTime = document.getElementById('testDriveTime').value;
+    const message = document.getElementById('messageTestDrive').value;
+
+    // Générer un code unique pour l'essai routier
+    const testDriveNumber = 'TD-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+
+    try {
+      // Sauvegarder les données dans Firebase (nouvelle collection: "testDrives")
+      await db.collection("testDrives").add({
+        testDriveNumber: testDriveNumber,
+        clientName: clientName,
+        clientEmail: clientEmail,
+        clientPhone: clientPhone,
+        vehicle: selectedVehicle,
+        date: testDriveDate,
+        time: testDriveTime,
+        message: message,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        status: "Confirmé" // Statut initial
+      });
+
+      // Envoyer l'e-mail via EmailJS
+      const templateParams = {
+        test_drive_number: testDriveNumber,
+        client_name: clientName,
+        client_email: clientEmail,
+        client_phone: clientPhone,
+        vehicle_name: selectedVehicle,
+        test_drive_date: testDriveDate,
+        test_drive_time: testDriveTime,
+        message: message
+      };
+
+      await emailjs.send(SERVICE_ID, TEMPLATE_TESTDRIVE_ID, templateParams); // Utilisation de SERVICE_ID et TEMPLATE_TESTDRIVE_ID
+
+      testDriveMessage.textContent = 'Votre demande d\'essai routier a été confirmée ! Un email de confirmation a été envoyé.';
+      testDriveMessage.classList.remove('text-red-600');
+      testDriveMessage.classList.add('text-green-600');
+      testDriveForm.reset();
+
+    } catch (error) {
+      console.error("❌ Erreur lors de la réservation de l'essai routier :", error);
+      testDriveMessage.textContent = "Une erreur est survenue lors de la réservation de l'essai routier. Veuillez réessayer.";
+      testDriveMessage.classList.remove('text-green-600');
+      testDriveMessage.classList.add('text-red-600');
+    }
+  });
+
+
+  // --- Formulaire de Contact ---
+  const contactForm = document.getElementById('contactForm');
+  const contactFormMessage = document.getElementById('contactFormMessage');
+
+  contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const contactName = document.getElementById('contactName').value;
+      const contactEmail = document.getElementById('contactEmail').value;
+      const contactSubject = document.getElementById('contactSubject').value;
+      const contactMessageText = document.getElementById('contactMessage').value;
+
+      try {
+          // Envoyer l'e-mail via EmailJS pour le contact général
+          const templateParams = {
+              from_name: contactName,
+              from_email: contactEmail,
+              subject: contactSubject,
+              message: contactMessageText
+          };
+
+          await emailjs.send(SERVICE_ID, TEMPLATE_CONTACT_ID, templateParams); // Utilisation de SERVICE_ID et TEMPLATE_CONTACT_ID
+
+          contactFormMessage.textContent = 'Votre message a été envoyé avec succès ! Nous vous recontacterons bientôt.';
+          contactFormMessage.classList.remove('text-red-600');
+          contactFormMessage.classList.add('text-green-600');
+          contactForm.reset();
+      } catch (error) {
+          console.error("❌ Erreur lors de l'envoi du message de contact :", error);
+          contactFormMessage.textContent = "Une erreur est survenue lors de l'envoi de votre message. Veuillez réessayer.";
+          contactFormMessage.classList.remove('text-green-600');
+          contactFormMessage.classList.add('text-red-600');
+      }
+  });
+
+
+  // Charger les véhicules au chargement de la page
+  document.addEventListener('DOMContentLoaded', loadVehicles);
+
+  </script>
+
+</body>
+</html>

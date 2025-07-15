@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Votre Concessionnaire Auto</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+  <div class="max-w-6xl mx-auto py-10 px-4">
+    <h1 class="text-3xl font-bold text-center mb-8 text-yellow-600">📊 Tableau de bord Administration</h1>
+
+    <div class="text-right mb-6">
+      <button id="logoutButton" class="bg-red-600 text-white font-bold py-2 px-4 rounded hover:bg-red-700 transition duration-300">
+        <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
+      </button>
+    </div>
+
+    <h2 class="text-2xl font-bold mb-6 text-yellow-600">📝 Demandes de Devis & Location</h2>
+    <div class="overflow-x-auto mb-10">
+      <table class="min-w-full bg-white shadow rounded-lg">
+        <thead class="bg-yellow-600 text-white">
+          <tr>
+            <th class="py-3 px-4 text-left">Code Demande</th>
+            <th class="py-3 px-4 text-left">Client</th>
+            <th class="py-3 px-4 text-left">Type</th>
+            <th class="py-3 px-4 text-left">Véhicule</th>
+            <th class="py-3 px-4 text-left">Période Location</th>
+            <th class="py-3 px-4 text-left">Message</th>
+            <th class="py-3 px-4 text-left">Date</th>
+            <th class="py-3 px-4 text-left">Statut</th>
+            <th class="py-3 px-4 text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="requestList" class="text-gray-700">
+          <tr><td colspan="9" class="text-center py-4">Chargement des demandes...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="text-2xl font-bold mb-6 text-yellow-600">🗓️ Demandes d'Essai Routier</h2>
+    <div class="overflow-x-auto mb-10">
+      <table class="min-w-full bg-white shadow rounded-lg">
+        <thead class="bg-yellow-600 text-white">
+          <tr>
+            <th class="py-3 px-4 text-left">Code Essai</th>
+            <th class="py-3 px-4 text-left">Client</th>
+            <th class="py-3 px-4 text-left">Véhicule</th>
+            <th class="py-3 px-4 text-left">Date & Heure</th>
+            <th class="py-3 px-4 text-left">Message</th>
+            <th class="py-3 px-4 text-left">Statut</th>
+            <th class="py-3 px-4 text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="testDriveList" class="text-gray-700">
+          <tr><td colspan="7" class="text-center py-4">Chargement des essais routiers...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="text-2xl font-bold mb-6 text-yellow-600">🚗 Gestion des Véhicules</h2>
+
+    <div class="bg-white p-6 rounded-lg shadow-lg mb-10">
+      <h3 class="text-xl font-semibold mb-4 text-gray-800">Ajouter un nouveau véhicule</h3>
+      <form id="addVehicleForm" class="space-y-4">
+        <input type="text" id="vehicleName" class="w-full p-3 border border-gray-300 rounded focus:ring focus:ring-yellow-500" placeholder="Nom du véhicule (ex: Toyota Hilux 2023)" required>
+        <textarea id="vehicleDescription" class="w-full p-3 border border-gray-300 rounded focus:ring focus:ring-yellow-500 h-24" placeholder="Description du véhicule (caractéristiques, état)" required></textarea>
+        <input type="text" id="vehiclePrice" class="w-full p-3 border border-gray-300 rounded focus:ring focus:ring-yellow-500" placeholder="Prix (ex: 25.000.000 F CFA ou 50.000 F CFA/jour)" required>
+        <input type="text" id="vehicleImageUrl" class="w-full p-3 border border-gray-300 rounded focus:ring focus:ring-yellow-500" placeholder="URL de l'image du véhicule (Imgur, etc.)" required>
+        <select id="vehicleCategory" class="w-full p-3 border border-gray-300 rounded focus:ring focus:ring-yellow-500" required>
+            <option value="">Sélectionnez une catégorie</option>
+            <option value="voitures">Voitures</option>
+            <option value="camions">Camions</option>
+            <option value="suv">SUV & 4x4</option>
+            <option value="motos">Motos</option>
+            <option value="vans">Vans & Minibus</option>
+            <option value="autres">Autres</option>
+        </select>
+        <button type="submit" class="bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700 transition duration-300">
+          <i class="fas fa-plus-circle mr-2"></i>Ajouter Véhicule
+        </button>
+      </form>
+      <p id="addVehicleMessage" class="mt-4 text-center text-sm"></p>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h3 class="text-xl font-semibold mb-4 text-gray-800">Liste des Véhicules</h3>
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white">
+          <thead class="bg-gray-200 text-gray-700">
+            <tr>
+              <th class="py-3 px-4 text-left">Nom</th>
+              <th class="py-3 px-4 text-left">Catégorie</th>
+              <th class="py-3 px-4 text-left">Prix</th>
+              <th class="py-3 px-4 text-left">Image</th>
+              <th class="py-3 px-4 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="vehicleList" class="text-gray-700">
+            <tr><td colspan="5" class="text-center py-4">Chargement des véhicules...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Firebase Config (Doit correspondre à celle de index.html et login.html)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDhn7_DT49CWkg5atHPz3hZVYnPVSLdaos", // REMPLACEZ PAR VOTRE VRAIE CLÉ API
+      authDomain: "automobile-c6769.firebaseapp.com",
+      projectId: "automobile-c6769",
+      storageBucket: "automobile-c6769.firebasestorage.app",
+      messagingSenderId: "672823943035",
+      appId: "1:672823943035:web:f8ff8623623cebf58b67de",
+      measurementId: "G-FCYWVT83Y2" // Ceci est pour Google Analytics, pas directement utilisé par Firestore ou Auth
+    };
+
+    // Initialisation de Firebase avec la syntaxe COMPATIBLE (via l'objet global 'firebase')
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();   // Pour Firestore
+    const auth = firebase.auth();     // Pour l'authentification
+
+    // --- Vérification de l'authentification ---
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        // Aucun utilisateur connecté, rediriger vers la page de connexion
+        window.location.href = "login.html";
+      } else {
+        console.log("Admin connecté:", user.email);
+        // Charger les données uniquement si l'utilisateur est authentifié
+        loadRequests();
+        loadTestDrives();
+        loadVehicles();
+      }
+    });
+
+    // --- Déconnexion ---
+    document.getElementById('logoutButton').addEventListener('click', () => {
+      auth.signOut().then(() => {
+        window.location.href = "login.html";
+      }).catch(error => {
+        console.error("Erreur de déconnexion:", error);
+        alert("Erreur de déconnexion: " + error.message);
+      });
+    });
+
+
+    // --- Chargement des Demandes de Devis & Location ---
+    const requestListTable = document.getElementById('requestList');
+
+    async function loadRequests() {
+      requestListTable.innerHTML = '<tr><td colspan="9" class="text-center py-4">Chargement des demandes...</td></tr>';
+      try {
+        const snapshot = await db.collection("requests").orderBy("timestamp", "desc").get();
+        requestListTable.innerHTML = ''; // Effacer le message de chargement
+
+        if (snapshot.empty) {
+          requestListTable.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-gray-500">Aucune demande trouvée.</td></tr>';
+          return;
+        }
+
+        snapshot.docs.forEach(doc => {
+          const request = doc.data();
+          const tr = document.createElement('tr');
+          tr.className = 'border-b last:border-b-0';
+          
+          tr.innerHTML = `
+            <td class="py-3 px-4">${request.requestNumber || 'N/A'}</td>
+            <td class="py-3 px-4">
+                <strong>${request.clientName}</strong><br>
+                ${request.clientEmail}<br>
+                ${request.clientPhone}
+            </td>
+            <td class="py-3 px-4">${request.requestType === 'achat' ? 'Achat' : 'Location'}</td>
+            <td class="py-3 px-4">${request.vehicle}</td>
+            <td class="py-3 px-4">${request.rentalPeriod || 'N/A'}</td>
+            <td class="py-3 px-4 text-sm max-w-xs overflow-hidden text-ellipsis whitespace-nowrap" title="${request.message}">${request.message || 'N/A'}</td>
+            <td class="py-3 px-4">${request.timestamp ? new Date(request.timestamp.toDate()).toLocaleString('fr-FR') : 'N/A'}</td>
+            <td class="py-3 px-4">
+                <span class="px-2 py-1 rounded-full text-xs font-semibold ${
+                    request.status === 'En attente' ? 'bg-yellow-100 text-yellow-800' :
+                    request.status === 'Traitée' ? 'bg-green-100 text-green-800' :
+                    'bg-gray-100 text-gray-800'
+                }">${request.status}</span>
+            </td>
+            <td class="py-3 px-4">
+                <select onchange="updateRequestStatus('${doc.id}', this.value)" 
+                                class="p-2 border border-gray-300 rounded text-sm">
+                    <option value="En attente" ${request.status === 'En attente' ? 'selected' : ''}>En attente</option>
+                    <option value="Traitée" ${request.status === 'Traitée' ? 'selected' : ''}>Traitée</option>
+                    <option value="Annulée" ${request.status === 'Annulée' ? 'selected' : ''}>Annulée</option>
+                </select>
+                <button onclick="deleteRequest('${doc.id}')" 
+                                class="ml-2 bg-red-500 text-white p-2 rounded text-sm hover:bg-red-600 transition duration-200" title="Supprimer">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </td>
+          `;
+          requestListTable.appendChild(tr);
+        });
+      } catch (error) {
+        console.error("❌ Erreur lors du chargement des demandes :", error);
+        requestListTable.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-red-600">Erreur de chargement des demandes.</td></tr>';
+      }
+    }
+
+    async function updateRequestStatus(requestId, newStatus) {
+      try {
+        await db.collection("requests").doc(requestId).update({ status: newStatus });
+        console.log("Statut de la demande mis à jour !");
+        loadRequests(); // Recharger pour refléter les changements
+      } catch (error) {
+        console.error("❌ Erreur lors de la mise à jour du statut de la demande :", error);
+        alert("Erreur lors de la mise à jour du statut : " + error.message);
+      }
+    }
+    window.updateRequestStatus = updateRequestStatus; // Exposer à la fenêtre globale
+
+    async function deleteRequest(requestId) {
+      if (confirm("Voulez-vous vraiment supprimer cette demande ?")) {
+        try {
+          await db.collection("requests").doc(requestId).delete();
+          console.log("🗑️ Demande supprimée de Firestore");
+          loadRequests(); // Recharger après suppression
+        } catch (error) {
+          console.error("❌ Erreur lors de la suppression de la demande :", error);
+          alert("Erreur lors de la suppression de la demande : " + error.message);
+        }
+      }
+    }
+    window.deleteRequest = deleteRequest; // Exposer à la fenêtre globale
+
+
+    // --- Chargement des Demandes d'Essai Routier ---
+    const testDriveListTable = document.getElementById('testDriveList');
+
+    async function loadTestDrives() {
+      testDriveListTable.innerHTML = '<tr><td colspan="7" class="text-center py-4">Chargement des essais routiers...</td></tr>';
+      try {
+        const snapshot = await db.collection("testDrives").orderBy("timestamp", "desc").get();
+        testDriveListTable.innerHTML = ''; // Effacer le message de chargement
+
+        if (snapshot.empty) {
+          testDriveListTable.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-gray-500">Aucune demande d\'essai routier trouvée.</td></tr>';
+          return;
+        }
+
+        snapshot.docs.forEach(doc => {
+          const testDrive = doc.data();
+          const tr = document.createElement('tr');
+          tr.className = 'border-b last:border-b-0';
+          
+          tr.innerHTML = `
+            <td class="py-3 px-4">${testDrive.testDriveNumber || 'N/A'}</td>
+            <td class="py-3 px-4">
+                <strong>${testDrive.clientName}</strong><br>
+                ${testDrive.clientEmail}<br>
+                ${testDrive.clientPhone}
+            </td>
+            <td class="py-3 px-4">${testDrive.vehicle}</td>
+            <td class="py-3 px-4">${testDrive.date} à ${testDrive.time}</td>
+            <td class="py-3 px-4 text-sm max-w-xs overflow-hidden text-ellipsis whitespace-nowrap" title="${testDrive.message}">${testDrive.message || 'N/A'}</td>
+            <td class="py-3 px-4">
+                <span class="px-2 py-1 rounded-full text-xs font-semibold ${
+                    testDrive.status === 'Confirmé' ? 'bg-green-100 text-green-800' :
+                    testDrive.status === 'Annulé' ? 'bg-red-100 text-red-800' :
+                    'bg-gray-100 text-gray-800'
+                }">${testDrive.status}</span>
+            </td>
+            <td class="py-3 px-4">
+                <select onchange="updateTestDriveStatus('${doc.id}', this.value)" 
+                                class="p-2 border border-gray-300 rounded text-sm">
+                    <option value="Confirmé" ${testDrive.status === 'Confirmé' ? 'selected' : ''}>Confirmé</option>
+                    <option value="Annulé" ${testDrive.status === 'Annulé' ? 'selected' : ''}>Annulé</option>
+                    <option value="Terminé" ${testDrive.status === 'Terminé' ? 'selected' : ''}>Terminé</option>
+                </select>
+                <button onclick="deleteTestDrive('${doc.id}')" 
+                                class="ml-2 bg-red-500 text-white p-2 rounded text-sm hover:bg-red-600 transition duration-200" title="Supprimer">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </td>
+          `;
+          testDriveListTable.appendChild(tr);
+        });
+      } catch (error) {
+        console.error("❌ Erreur lors du chargement des essais routiers :", error);
+        testDriveListTable.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-red-600">Erreur de chargement des essais routiers.</td></tr>';
+      }
+    }
+
+    async function updateTestDriveStatus(testDriveId, newStatus) {
+      try {
+        await db.collection("testDrives").doc(testDriveId).update({ status: newStatus });
+        console.log("Statut de l'essai routier mis à jour !");
+        loadTestDrives(); // Recharger pour refléter les changements
+      } catch (error) {
+        console.error("❌ Erreur lors de la mise à jour du statut de l'essai routier :", error);
+        alert("Erreur lors de la mise à jour du statut : " + error.message);
+      }
+    }
+    window.updateTestDriveStatus = updateTestDriveStatus; // Exposer à la fenêtre globale
+
+    async function deleteTestDrive(testDriveId) {
+      if (confirm("Voulez-vous vraiment supprimer cette demande d'essai routier ?")) {
+        try {
+          await db.collection("testDrives").doc(testDriveId).delete();
+          console.log("🗑️ Demande d'essai routier supprimée de Firestore");
+          loadTestDrives(); // Recharger après suppression
+        } catch (error) {
+          console.error("❌ Erreur lors de la suppression de la demande d'essai routier :", error);
+          alert("Erreur lors de la suppression de la demande : " + error.message);
+        }
+      }
+    }
+    window.deleteTestDrive = deleteTestDrive; // Exposer à la fenêtre globale
+
+
+    // --- Gestion des Véhicules ---
+    const addVehicleForm = document.getElementById('addVehicleForm');
+    const addVehicleMessage = document.getElementById('addVehicleMessage');
+    const vehicleListTable = document.getElementById('vehicleList');
+
+    // Ajouter un nouveau véhicule
+    addVehicleForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('vehicleName').value;
+      const description = document.getElementById('vehicleDescription').value;
+      const price = document.getElementById('vehiclePrice').value;
+      const imageUrl = document.getElementById('vehicleImageUrl').value;
+      const category = document.getElementById('vehicleCategory').value;
+
+      try {
+        await db.collection("vehicles").add({ 
+          name: name,
+          description: description,
+          price: price,
+          imageUrl: imageUrl,
+          category: category,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        addVehicleMessage.textContent = 'Véhicule ajouté avec succès !';
+        addVehicleMessage.classList.remove('text-red-600');
+        addVehicleMessage.classList.add('text-green-600');
+        addVehicleForm.reset();
+        loadVehicles(); // Recharger la liste des véhicules
+      } catch (error) {
+        console.error("❌ Erreur lors de l'ajout du véhicule :", error);
+        addVehicleMessage.textContent = "Erreur lors de l'ajout du véhicule : " + error.message;
+        addVehicleMessage.classList.remove('text-green-600');
+        addVehicleMessage.classList.add('text-red-600');
+      }
+    });
+
+    // Charger les véhicules
+    async function loadVehicles() {
+      vehicleListTable.innerHTML = '<tr><td colspan="5" class="text-center py-4">Chargement des véhicules...</td></tr>';
+      try {
+        const snapshot = await db.collection("vehicles").orderBy("name").get();
+        vehicleListTable.innerHTML = ''; // Effacer le message de chargement
+
+        if (snapshot.empty) {
+            vehicleListTable.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-gray-500">Aucun véhicule trouvé.</td></tr>';
+            return;
+        }
+
+        snapshot.docs.forEach(doc => {
+          const vehicle = doc.data();
+          const tr = document.createElement('tr');
+          tr.className = 'border-b last:border-b-0';
+          
+          tr.innerHTML = `
+            <td class="py-3 px-4">${vehicle.name}</td>
+            <td class="py-3 px-4">${vehicle.category}</td>
+            <td class="py-3 px-4">${vehicle.price}</td>
+            <td class="py-3 px-4">
+                <img src="${vehicle.imageUrl}" alt="${vehicle.name}" class="h-12 w-12 object-cover rounded-md">
+            </td>
+            <td class="py-3 px-4">
+                <button onclick="deleteVehicle('${doc.id}')" 
+                                class="bg-red-500 text-white p-2 rounded text-sm hover:bg-red-600 transition duration-200" title="Supprimer">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </td>
+          `;
+          vehicleListTable.appendChild(tr);
+        });
+      } catch (error) {
+        console.error("❌ Erreur lors du chargement des véhicules :", error);
+        vehicleListTable.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-red-600">Erreur de chargement des véhicules.</td></tr>';
+      }
+    }
+
+    // Supprimer un véhicule
+    async function deleteVehicle(vehicleId) {
+      if (confirm("Voulez-vous vraiment supprimer ce véhicule ? (L'image ne sera pas supprimée automatiquement de l'hébergeur externe.)")) {
+        try {
+          await db.collection("vehicles").doc(vehicleId).delete();
+          console.log("🗑️ Véhicule supprimé de Firestore");
+          loadVehicles(); // Recharger la liste après suppression
+        } catch (error) {
+          console.error("❌ Erreur lors de la suppression du véhicule :", error);
+          alert("Erreur lors de la suppression du véhicule : " + error.message);
+        }
+      }
+    }
+    window.deleteVehicle = deleteVehicle; // Exposer à la fenêtre globale
+
+  </script>
+</body>
+</html>
